@@ -133,11 +133,39 @@
       .metric-value{font-size:23px}
       .bottom-nav{gap:6px}
     }
+
+
+    /* Minimal profile mark, flat metrics, and compact navigation */
+    .topbar{align-items:center;padding:22px 20px 14px}
+    .brand-copy{display:flex;flex-direction:column;gap:2px}
+    .greeting{font-size:12px;font-weight:600;letter-spacing:.01em}
+    .topbar h1{font-size:25px;font-weight:800;letter-spacing:-.03em}
+    .profile-icon{width:42px;height:42px;flex:none;display:grid;place-items:center;border:1px solid rgba(255,255,255,.35);border-radius:50%;background:rgba(255,255,255,.14);color:#fff}
+    .profile-icon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+    .summary{gap:0;background:transparent;border-top:1px solid #d8d7d7;border-bottom:1px solid #d8d7d7}
+    .metric{min-height:128px;padding:14px 12px;border:0;border-radius:0;background:transparent}
+    .metric:nth-child(odd){border-right:1px solid #d8d7d7}
+    .metric:nth-child(n+3){border-top:1px solid #d8d7d7}
+    .metric-icon{width:30px;height:30px;background:transparent;border-radius:0;color:var(--brand)}
+    .metric-icon svg{width:20px;height:20px}
+    .metric-value{font-size:25px;margin-top:8px}
+    .metric-note{font-size:10px}
+    .week-card{padding:16px 0;margin-top:14px;border:0;border-top:1px solid #d8d7d7;border-radius:0;background:transparent}
+    .activity-list{gap:0}
+    .activity-row{padding:12px 0;border:0;border-bottom:1px solid #d8d7d7;border-radius:0;background:transparent}
+    .row-icon{width:36px;height:36px;border-radius:50%;background:var(--brand-soft)}
+    .empty{padding:20px 0;border:0;border-radius:0;text-align:left}
+    .bottom-nav{height:calc(64px + env(safe-area-inset-bottom));gap:5px;padding:4px 12px env(safe-area-inset-bottom)}
+    .nav{min-height:48px;gap:2px;padding:4px 8px;border-radius:12px;font-size:10px;font-weight:700}
+    .nav svg{width:18px;height:18px}
+    .nav-action{flex:0 1 76px;min-height:48px;max-width:76px;border-radius:12px;font-size:10px}
+    .nav-action svg{width:24px;height:24px;padding:4px;border-radius:50%;background:#fff;color:var(--brand)}
+    @media(max-width:360px){.topbar{padding:16px 16px 12px}.topbar h1{font-size:22px}.summary .metric{min-height:120px;padding:12px 9px}.metric-value{font-size:22px}.bottom-nav{padding-left:8px;padding-right:8px}.nav-action{flex-basis:68px;max-width:68px}}
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="topbar"><div class="brand-row"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><div class="brand-copy"><p class="greeting" id="greetingLabel">Good morning</p><h1>Move Daily</h1></div></div><button class="header-action" id="historyShortcut" type="button" aria-label="View activity history"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></header>
+    <header class="topbar"><div class="brand-copy"><p class="greeting" id="greetingLabel">Good morning</p><h1>Move Daily</h1></div><span class="profile-icon" role="img" aria-label="Profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></span></header>
     <div class="date-line"><strong id="todayLabel"></strong><span id="dailyGoalLabel">Daily goals</span></div>
     <main class="views">
       <section class="view active" id="overviewView" aria-label="Overview">

@@ -172,7 +172,6 @@ function deleteActivity(id) {
 }
 
 document.querySelectorAll('[data-open-form]').forEach(button => button.addEventListener('click', openForm));
-document.querySelector('#historyShortcut').addEventListener('click', () => document.querySelector('.nav[data-view="activity"]').click());
 document.querySelectorAll('.nav[data-view]').forEach(button => button.addEventListener('click', () => {
   const view = button.dataset.view;
   document.querySelectorAll('.view').forEach(section => section.classList.toggle('active', section.id === `${view}View`));
