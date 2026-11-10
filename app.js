@@ -129,6 +129,8 @@ function render() {
   const steps = sum(todayActivities, 'steps');
   const calories = sum(todayActivities, 'calories');
   const minutes = sum(todayActivities, 'duration');
+  const currentHour = new Date().getHours();
+  document.querySelector('#greetingLabel').textContent = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
   document.querySelector('#todayLabel').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
   document.querySelector('#activityCount').textContent = `${todayActivities.length} ${todayActivities.length === 1 ? 'activity' : 'activities'}`;
   document.querySelector('#sessionsValue').textContent = numberFormat.format(todayActivities.length);
@@ -170,10 +172,14 @@ function deleteActivity(id) {
 }
 
 document.querySelectorAll('[data-open-form]').forEach(button => button.addEventListener('click', openForm));
+document.querySelector('#historyShortcut').addEventListener('click', () => document.querySelector('.nav[data-view="activity"]').click());
 document.querySelectorAll('.nav[data-view]').forEach(button => button.addEventListener('click', () => {
   const view = button.dataset.view;
   document.querySelectorAll('.view').forEach(section => section.classList.toggle('active', section.id === `${view}View`));
-  document.querySelectorAll('.nav[data-view]').forEach(nav => nav.classList.toggle('active', nav === button));
+  document.querySelectorAll('.nav[data-view]').forEach(nav => {
+    nav.classList.toggle('active', nav === button);
+    if (nav === button) nav.setAttribute('aria-current', 'page'); else nav.removeAttribute('aria-current');
+  });
 }));
 document.querySelector('#closeSheet').addEventListener('click', closeForm);
 document.querySelector('#cancelForm').addEventListener('click', closeForm);
@@ -194,7 +200,11 @@ document.querySelector('#activityForm').addEventListener('submit', event => {
   closeForm();
   render();
   document.querySelectorAll('.view').forEach(section => section.classList.toggle('active', section.id === 'overviewView'));
-  document.querySelectorAll('.nav[data-view]').forEach(nav => nav.classList.toggle('active', nav.dataset.view === 'overview'));
+  document.querySelectorAll('.nav[data-view]').forEach(nav => {
+    const active = nav.dataset.view === 'overview';
+    nav.classList.toggle('active', active);
+    if (active) nav.setAttribute('aria-current', 'page'); else nav.removeAttribute('aria-current');
+  });
 });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') closeForm(); });
 

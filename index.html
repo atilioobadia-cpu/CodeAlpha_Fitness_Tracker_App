@@ -68,11 +68,34 @@
     /* Keep scrolling available without showing the scrollbar track */
     .view,.sheet{scrollbar-width:none;-ms-overflow-style:none}
     .view::-webkit-scrollbar,.sheet::-webkit-scrollbar{display:none;width:0;height:0}
+
+    /* Refined header and bottom navigation */
+    .topbar{padding:20px 20px 16px;border-bottom:1px solid #e8edf0}
+    .brand-row{display:flex;align-items:center;gap:12px;min-width:0}
+    .brand-mark{width:44px;height:44px;flex:none;border-radius:15px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+    .brand-mark svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .brand-copy{min-width:0}.greeting{font-size:12px;line-height:1.2;font-weight:700;color:var(--muted)}
+    .topbar h1{font-size:23px;line-height:1.2;letter-spacing:-.025em;margin-top:3px}
+    .header-action{width:42px;height:42px;flex:none;display:grid;place-items:center;border:1px solid var(--brand-border);border-radius:14px;background:#fff;color:var(--brand)}
+    .header-action svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+    .header-action:hover{background:var(--brand-soft)}
+    .header-action:focus-visible{outline:3px solid var(--brand-border);outline-offset:2px}
+    .date-line{padding-top:12px}
+    .date-line span{display:inline-flex;align-items:center;gap:6px;font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:800;color:var(--brand)}
+    .date-line span:before{content:"";width:6px;height:6px;border-radius:50%;background:var(--brand)}
+    .bottom-nav{justify-content:space-evenly;gap:8px;padding-left:16px;padding-right:16px;background:#fff;border-top:1px solid #e8edf0}
+    .nav{flex:1;min-width:0;min-height:56px;gap:3px;border-radius:15px;font-size:11px;letter-spacing:.01em;transition:background-color .15s,color .15s}
+    .nav.active{background:var(--brand-soft);color:var(--brand)}
+    .nav:not(.nav-action):hover{background:#f5f9f9;color:var(--brand)}
+    .nav svg{width:21px;height:21px}
+    .nav-action{flex:1.15;min-height:50px;max-width:132px;border-radius:15px;background:var(--brand);color:#fff;font-size:11px;font-weight:800}
+    .nav-action:hover{background:var(--brand-dark)}.nav-action svg{stroke-width:2}
+    @media(max-width:360px){.topbar{padding:16px 16px 12px}.brand-mark{width:40px;height:40px}.topbar h1{font-size:21px}.bottom-nav{gap:5px;padding-left:10px;padding-right:10px}.nav-action{max-width:120px}}
   </style>
 </head>
 <body>
   <div class="app">
-    <header class="topbar"><div><p class="greeting">Your daily movement</p><h1>Move Daily</h1></div><button class="profile" type="button" aria-label="Fitness tracker profile"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21a7 7 0 0 1 14 0"/></svg></button></header>
+    <header class="topbar"><div class="brand-row"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></span><div class="brand-copy"><p class="greeting" id="greetingLabel">Good morning</p><h1>Move Daily</h1></div></div><button class="header-action" id="historyShortcut" type="button" aria-label="View activity history"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></button></header>
     <div class="date-line"><strong id="todayLabel"></strong><span id="dailyGoalLabel">Daily goals</span></div>
     <main class="views">
       <section class="view active" id="overviewView" aria-label="Overview">
@@ -89,7 +112,7 @@
       </section>
       <section class="view" id="activityView" aria-label="Activity log"><div class="section-title"><h2>Activity log</h2><span id="allCount"></span></div><p class="empty" id="allEmpty" hidden>No activities yet. Log your first movement to get started.</p><div class="activity-list" id="allList"></div><button class="primary overview-add" type="button" data-open-form>Log an activity</button></section>
     </main>
-    <nav class="bottom-nav" aria-label="Main navigation"><button class="nav active" type="button" data-view="overview"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/></svg>Overview</button><button class="nav" type="button" data-view="activity"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>Activity</button><button class="nav" type="button" data-open-form><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>Log</button></nav>
+    <nav class="bottom-nav" aria-label="Main navigation"><button class="nav active" type="button" data-view="overview" aria-current="page"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="8" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="15" width="7" height="6" rx="1"/></svg>Overview</button><button class="nav" type="button" data-view="activity"><svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg>History</button><button class="nav nav-action" type="button" data-open-form><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 8v8m-4-4h8"/></svg>Log activity</button></nav>
   </div>
   <div class="backdrop" id="backdrop"></div>
   <section class="sheet" id="entrySheet" role="dialog" aria-modal="true" aria-labelledby="formTitle">
