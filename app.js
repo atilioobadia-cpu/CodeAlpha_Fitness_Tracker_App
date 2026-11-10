@@ -1,5 +1,5 @@
 const STORAGE_KEY = 'move-daily-activities';
-const GOALS = { steps: 8000, calories: 500, minutes: 30 };
+const GOALS = { steps: 8000, calories: 500, minutes: 30, sessions: 3 };
 const numberFormat = new Intl.NumberFormat();
 const today = localDateKey(new Date());
 let activities = loadActivities();
@@ -38,7 +38,14 @@ function sum(items, key) {
 function setMetric(valueId, fillId, noteId, value, goal, unit) {
   document.querySelector(`#${valueId}`).textContent = numberFormat.format(value);
   const percent = Math.min(100, Math.round((value / goal) * 100));
-  document.querySelector(`#${fillId}`).style.width = `${percent}%`;
+  const fill = document.querySelector(`#${fillId}`);
+  if (fill.tagName.toLowerCase() === 'circle') {
+    const circumference = 2 * Math.PI * 24;
+    fill.style.strokeDasharray = `${circumference}`;
+    fill.style.strokeDashoffset = `${circumference * (1 - percent / 100)}`;
+  } else {
+    fill.style.width = `${percent}%`;
+  }
   document.querySelector(`#${noteId}`).textContent = `${percent}% of ${numberFormat.format(goal)} ${unit} goal`;
 }
 
@@ -133,7 +140,7 @@ function render() {
   document.querySelector('#greetingLabel').textContent = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
   document.querySelector('#todayLabel').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
   document.querySelector('#activityCount').textContent = `${todayActivities.length} ${todayActivities.length === 1 ? 'activity' : 'activities'}`;
-  document.querySelector('#sessionsValue').textContent = numberFormat.format(todayActivities.length);
+  setMetric('sessionsValue', 'sessionsProgress', 'sessionsNote', todayActivities.length, GOALS.sessions, 'sessions');
   setMetric('stepsValue', 'stepsProgress', 'stepsNote', steps, GOALS.steps, 'steps');
   setMetric('caloriesValue', 'caloriesProgress', 'caloriesNote', calories, GOALS.calories, 'kcal');
   setMetric('minutesValue', 'minutesProgress', 'minutesNote', minutes, GOALS.minutes, 'min');
@@ -152,7 +159,9 @@ function render() {
   renderWeek();
 }
 
-function openForm() {
+function openForm(event) {
+  const preferredType = event && event.currentTarget && event.currentTarget.dataset.activityType;
+  if (preferredType) document.querySelector('#typeInput').value = preferredType;
   document.querySelector('#dateInput').value = today;
   document.querySelector('#formError').textContent = '';
   document.querySelector('#backdrop').classList.add('open');
