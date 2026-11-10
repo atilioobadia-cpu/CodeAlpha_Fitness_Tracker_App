@@ -3,6 +3,7 @@ const GOALS = { steps: 8000, calories: 500, minutes: 30, sessions: 3 };
 const numberFormat = new Intl.NumberFormat();
 const today = localDateKey(new Date());
 let activities = loadActivities();
+let selectedDate = today;
 
 function localDateKey(date) {
   const year = date.getFullYear();
@@ -40,7 +41,8 @@ function setMetric(valueId, fillId, noteId, value, goal, unit) {
   const percent = Math.min(100, Math.round((value / goal) * 100));
   const fill = document.querySelector(`#${fillId}`);
   if (fill.tagName.toLowerCase() === 'circle') {
-    const circumference = 2 * Math.PI * 24;
+    const radius = Number(fill.getAttribute('r'));
+    const circumference = 2 * Math.PI * radius;
     fill.style.strokeDasharray = `${circumference}`;
     fill.style.strokeDashoffset = `${circumference * (1 - percent / 100)}`;
   } else {
@@ -95,6 +97,31 @@ function formatDate(dateKey) {
   return new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' }).format(date);
 }
 
+
+function renderWeekStrip() {
+  const strip = document.querySelector('#weekStrip');
+  strip.replaceChildren();
+  const start = new Date();
+  start.setDate(start.getDate() - ((start.getDay() + 6) % 7));
+  for (let index = 0; index < 7; index++) {
+    const date = new Date(start);
+    date.setDate(start.getDate() + index);
+    const key = localDateKey(date);
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `week-day${key === selectedDate ? ' selected' : ''}`;
+    button.setAttribute('aria-label', new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(date));
+    button.setAttribute('aria-pressed', String(key === selectedDate));
+    const weekday = document.createElement('span');
+    weekday.textContent = new Intl.DateTimeFormat(undefined, { weekday: 'narrow' }).format(date);
+    const dayNumber = document.createElement('span');
+    dayNumber.textContent = String(date.getDate());
+    button.append(weekday, dayNumber);
+    button.addEventListener('click', () => { selectedDate = key; render(); });
+    strip.appendChild(button);
+  }
+}
+
 function renderWeek() {
   const days = [];
   const start = new Date();
@@ -132,16 +159,19 @@ function renderWeek() {
 }
 
 function render() {
-  const todayActivities = activities.filter(item => item.date === today);
+  renderWeekStrip();
+  const todayActivities = activities.filter(item => item.date === selectedDate);
   const steps = sum(todayActivities, 'steps');
   const calories = sum(todayActivities, 'calories');
   const minutes = sum(todayActivities, 'duration');
   const currentHour = new Date().getHours();
   document.querySelector('#greetingLabel').textContent = currentHour < 12 ? 'Good morning' : currentHour < 18 ? 'Good afternoon' : 'Good evening';
-  document.querySelector('#todayLabel').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
   document.querySelector('#activityCount').textContent = `${todayActivities.length} ${todayActivities.length === 1 ? 'activity' : 'activities'}`;
-  setMetric('sessionsValue', 'sessionsProgress', 'sessionsNote', todayActivities.length, GOALS.sessions, 'sessions');
+  document.querySelector('#sessionsValue').textContent = numberFormat.format(todayActivities.length);
+  document.querySelector('#sessionsNote').textContent = `${Math.min(100, Math.round((todayActivities.length / GOALS.sessions) * 100))}% of ${GOALS.sessions} session goal`;
   setMetric('stepsValue', 'stepsProgress', 'stepsNote', steps, GOALS.steps, 'steps');
+  document.querySelector('#ringCenterValue').textContent = numberFormat.format(steps);
+  document.querySelector('#ringDateCaption').textContent = selectedDate === today ? 'steps today' : formatDate(selectedDate);
   setMetric('caloriesValue', 'caloriesProgress', 'caloriesNote', calories, GOALS.calories, 'kcal');
   setMetric('minutesValue', 'minutesProgress', 'minutesNote', minutes, GOALS.minutes, 'min');
   const sorted = [...activities].sort((a, b) => b.date.localeCompare(a.date) || b.id.localeCompare(a.id));
@@ -203,6 +233,7 @@ document.querySelector('#activityForm').addEventListener('submit', event => {
   if (!duration && !steps && !calories) { error.textContent = 'Enter at least one value: duration, steps, or calories.'; return; }
   const activity = { id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, type: document.querySelector('#typeInput').value, date, duration, steps, calories };
   activities.push(activity);
+  selectedDate = date;
   saveActivities();
   document.querySelector('#activityForm').reset();
   closeForm();
@@ -216,5 +247,4 @@ document.querySelector('#activityForm').addEventListener('submit', event => {
 });
 document.addEventListener('keydown', event => { if (event.key === 'Escape') closeForm(); });
 
-document.querySelector('#todayLabel').textContent = new Intl.DateTimeFormat(undefined, { weekday: 'long', month: 'long', day: 'numeric' }).format(new Date());
 render();
