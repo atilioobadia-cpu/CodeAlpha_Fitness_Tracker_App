@@ -25,6 +25,45 @@
     @media(max-width:360px){.topbar,.date-line{padding-left:16px;padding-right:16px}.view{padding-left:16px;padding-right:16px}.summary{gap:8px}.metric{padding:12px}.metric-value{font-size:22px}.chart{gap:6px}.nav{min-width:72px;padding-left:8px;padding-right:8px}}
     @media(max-height:680px){body{height:auto;min-height:100svh}.app{height:auto;min-height:100svh}.views{min-height:500px}}
     @media(prefers-reduced-motion:reduce){.progress-fill,.sheet{transition:none}}
+
+    /* Compact phone viewport with independently scrollable content */
+    html,body{width:100%;height:100%;min-height:0;overflow:hidden}
+    body{min-height:100svh}
+    .app{width:min(100%,420px);height:100dvh;min-height:0;overflow:hidden}
+    .views{flex:1 1 auto;min-height:0;overflow:hidden}
+    .view{height:100%;min-height:0;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;-webkit-overflow-scrolling:touch;padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+    .bottom-nav{height:calc(70px + env(safe-area-inset-bottom));padding:6px 12px env(safe-area-inset-bottom);flex:none}
+    .sheet{max-height:min(90svh,720px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+    .metric,.week-card,.activity-row{background:var(--surface);border-color:#e2e8f0}
+    .metric{padding:13px;border-radius:18px}
+    .metric-value{font-size:clamp(21px,6vw,25px)}
+    .week-card{padding:14px;border-radius:18px}
+    .activity-row{padding:11px;border-radius:16px}
+    .section-title{margin-top:2px}
+    @media(min-width:481px){
+      body{height:100dvh;min-height:0;padding:18px 0}
+      .app{height:calc(100dvh - 36px);min-height:0;border:1px solid #dce3e9;border-radius:28px}
+    }
+    @media(max-width:390px){
+      .topbar{padding:18px 18px 12px}
+      .date-line{padding:0 18px 12px}
+      .view{padding-left:18px;padding-right:18px}
+      .summary{gap:8px}
+      .metric{padding:11px}
+      .metric-label{font-size:11px}
+      .metric-value{margin-top:8px}
+      .chart{gap:6px;height:120px}
+      .bar-slot{height:80px}
+      .bottom-nav{padding-left:8px;padding-right:8px}
+      .nav{min-width:72px;padding-left:8px;padding-right:8px}
+    }
+    @media(max-height:720px){
+      .topbar{padding-top:14px;padding-bottom:10px}
+      .date-line{padding-bottom:10px}
+      .week-card{margin-top:14px}
+      .recent{margin-top:14px}
+    }
+    @media(prefers-reduced-motion:reduce){.progress-fill{transition:none}}
   </style>
 </head>
 <body>
